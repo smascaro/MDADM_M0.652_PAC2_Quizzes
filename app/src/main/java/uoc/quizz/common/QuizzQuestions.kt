@@ -1,7 +1,5 @@
 package uoc.quizz.common
 
-import android.content.Context
-
 object QuizzQuestions {
     val questions: List<Question> = listOf(
         Question(
@@ -28,17 +26,17 @@ object QuizzQuestions {
             "Who is he?",
             listOf(Answer(1201, "Kevin Malone"), Answer(1202, "Ashton Kutcher")),
             1202,
-            "https://i.pinimg.com/originals/36/df/d0/36dfd0f8a361c938603cfd1db6930ab2.jpg"
+            "https://images2.minutemediacdn.com/image/upload/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/shape/cover/sport/dataimagepngbase64iVBORw0KGgoAAAANSUhEUgAAA60AAAHk-44fe9e2d2f237407b5e067bbdcb4d58e.jpg"
         ),
         Question(
-            "Guess the character's name",
+            "Guess the male character's name",
             listOf(
                 Answer(1301, "Roy"),
                 Answer(1302, "Bob Vance, Vance Refigeration"),
                 Answer(1303, "Todd Packer")
             ),
             1302,
-            "https://lh3.googleusercontent.com/proxy/IA6y1MgQ5ZkGCikJZGOzh8X95XhBURv1uLFTOaAcPnisDhNA54ffWB6Yp06mD03TRZjiMgipt65LSORqE_O1el3Jf4g3dMqafsTykGoyg-k2t7BKLQiDj8Lo_eV39g"
+            "https://images2.minutemediacdn.com/image/upload/c_fill,w_912,h_516,f_auto,q_auto,g_auto/shape/cover/entertainment/5ae37e2d1377c36a47000003.png"
         ),
         Question(
             "Which Michael is it?",
@@ -61,4 +59,5 @@ object QuizzQuestions {
             "https://s.yimg.com/uu/api/res/1.2/a7PgvEtqTnI74ESFB8aJ8g--~B/aD0zMjg7dz01MDA7c209MTthcHBpZD15dGFjaHlvbg--/http://media.zenfs.com/en-US/homerun/hello_giggles_454/a786ff28b7506f3966b127ab2ea8c53d"
         ),
     )
+//    val questions = baseQuestions.shuffled()
 }

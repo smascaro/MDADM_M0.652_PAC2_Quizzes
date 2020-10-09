@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Quizzes</string>
+    <string name="activity_question_send_button_text">Send</string>
+    <string name="activity_question_no_answer_selected">No answer has been selected</string>
+    <string name="activity_question_progress_template">%1$d / %2$d</string>
+    <string name="activity_question_restart_dialog_title">"Are you sure you want to restart the quiz?"</string>
+    <string name="activity_question_restart_dialog_message">If you continue with this action you will lose all your progress.</string>
+    <string name="activity_question_restart_dialog_positive">Yes</string>
+    <string name="activity_question_restart_dialog_negative">No</string>
+    <string name="activity_result_next_question_button_text">Next</string>
+    <string name="activity_result_try_again_button_text">Try again</string>
+    <string name="activity_result_start_again_button_text">Start again</string>
+    <string name="activity_result_message_finished_quizz_text">Congratulations!!\nYou have finished the lesson!</string>
+    <string name="activity_result_message_right_answer_text">That is correct!</string>
+    <string name="activity_result_message_wrong_answer_text">WRONG!! BOO!</string>
+    <string name="activity_result_attempts_count_wrong_answer_text">Fail count: %1$d</string>
+    <string name="activity_result_unexpected">Something unexpected happened, please try again</string>
+    <plurals name="activity_result_attempts_count_right_answer_text">
+        <item quantity="one">"You did it FIRST TRY!!"</item>
+        <item quantity="other">"You did it in %d attempts!"</item>
+    </plurals>
 </resources>
