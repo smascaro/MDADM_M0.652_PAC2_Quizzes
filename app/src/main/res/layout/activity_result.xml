@@ -8,17 +8,17 @@
         android:id="@+id/result_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="2"
+        android:text="@string/activity_result_message_finished_quizz_text"
+        android:textAppearance="@style/AppTextAppearance.Result.Message"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/result_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.4" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/result_image"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/ic_right_answer"
+        style="@style/ResultImageStyle"
+        android:src="@drawable/ic_wrong_answer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,6 +28,9 @@
         android:id="@+id/result_attempts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/activity_result_attempts_count_wrong_answer_text"
+        android:layout_marginTop="24dp"
+        android:textAppearance="@style/AppTextAppearance.Result.Attempts"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/result_image" />
@@ -37,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/activity_result_next_question_button_text"
-        android:visibility="gone"
+        style="@style/ResultNextQuestionButtonStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/result_attempts" />
@@ -47,7 +50,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/activity_result_try_again_button_text"
-        android:visibility="gone"
+        style="@style/ResultTryAgainButtonStyle"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/result_attempts" />
@@ -57,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/activity_result_start_again_button_text"
-        android:visibility="gone"
+        style="@style/ResultStartAgainButtonStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/result_attempts" />

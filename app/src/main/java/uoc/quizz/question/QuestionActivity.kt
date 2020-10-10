@@ -1,24 +1,38 @@
 package uoc.quizz.question
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.*
+import android.view.View
+import android.widget.Button
+import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatRadioButton
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.activity_question.*
-import kotlinx.android.synthetic.main.layout_toolbar.*
+import kotlinx.android.synthetic.main.layout_toolbar.toolbar
 import uoc.quizz.QuizzApplication
 import uoc.quizz.R
 import uoc.quizz.common.Answer
 import uoc.quizz.common.Question
 import uoc.quizz.common.QuizzProgressManager
 import uoc.quizz.common.QuizzQuestions
-import uoc.quizz.result.QUESTION_RESULT_INTENT_EXTRA_SELECTED_ANSWER_ID
 import uoc.quizz.result.ResultActivity
+
+//region Region: Constants
+const val QUESTION_RESULT_INTENT_EXTRA_SELECTED_ANSWER_ID =
+    "QUESTION_RESULT_INTENT_EXTRA_SELECTED_ANSWER_ID"
+//endregion
 
 class QuestionActivity : AppCompatActivity() {
     private lateinit var progressManager: QuizzProgressManager
@@ -30,13 +44,17 @@ class QuestionActivity : AppCompatActivity() {
         this.setSupportActionBar(toolbar)
         progressManager = (application as QuizzApplication).progressManager
 
-        val currentQuestionId = progressManager.getCurrentQuestionIndex()
-        currentQuestion = QuizzQuestions.questions[currentQuestionId]
+        initializeCurrentQuestion()
         initializeQuestionProgress()
         initializeQuestionTitle()
         initializeQuestionImage()
         initializeQuestionAnswers()
         initializeSendButton()
+    }
+
+    private fun initializeCurrentQuestion() {
+        val currentQuestionId = progressManager.getCurrentQuestionIndex()
+        currentQuestion = QuizzQuestions.questions[currentQuestionId]
     }
 
     private fun initializeQuestionProgress() {
@@ -50,36 +68,84 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun initializeQuestionTitle() {
-        title_question.text = currentQuestion.title
+        title_question.text = currentQuestion.getLocalizedTitle(getDeviceLanguage())
     }
 
+    private fun getDeviceLanguage(): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            resources.configuration.locales[0].language
+        } else {
+            resources.configuration.locale.language
+        }
+    }
 
     private fun initializeQuestionImage() {
-        val questionImageView = findViewById<ImageView>(R.id.image_question)
+        image_loading_progress_bar.visibility = View.VISIBLE
         Glide
             .with(this)
             .load(currentQuestion.imageUrl)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-            .into(questionImageView)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    handleLoadingImageError()
+                    return true
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    image_loading_progress_bar.visibility = View.GONE
+                    return false
+                }
+
+            })
+            .into(image_question)
+    }
+
+    private fun handleLoadingImageError() {
+        image_loading_progress_bar.visibility = View.GONE
+        image_question.setImageResource(R.drawable.ic_404_error)
+        Toast.makeText(
+            this@QuestionActivity,
+            getString(R.string.question_activity_image_loading_error_message),
+            Toast.LENGTH_SHORT
+        ).show()
+        image_question.setOnClickListener {
+            it.setOnClickListener(null)
+            initializeQuestionImage()
+        }
     }
 
     private fun initializeQuestionAnswers() {
         val questionsRadioGroup = findViewById<RadioGroup>(R.id.group_questions)
-        currentQuestion.answers.shuffled().forEach {
-            val answerButton = makeAnswerRadioButton(it)
-            questionsRadioGroup.addView(answerButton)
+        currentQuestion.answers.shuffled().forEach { answer ->
+            questionsRadioGroup.addView(makeAnswerRadioButton(answer))
         }
     }
 
-    private fun makeAnswerRadioButton(answer: Answer): RadioButton {
+    private fun makeAnswerRadioButton(answer: Answer): AppCompatRadioButton {
         val params = RadioGroup.LayoutParams(
             RadioGroup.LayoutParams.WRAP_CONTENT,
             RadioGroup.LayoutParams.WRAP_CONTENT
         )
-        return RadioButton(this).apply {
+        return AppCompatRadioButton(this).apply {
             text = answer.text
             layoutParams = params
             id = answer.id
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                setTextAppearance(R.style.AppTextAppearance_Question_Answer)
+            } else {
+                setTextAppearance(this@QuestionActivity, R.style.AppTextAppearance_Question_Answer)
+            }
         }
     }
 

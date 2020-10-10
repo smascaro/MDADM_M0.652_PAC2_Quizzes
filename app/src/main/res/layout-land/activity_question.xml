@@ -6,7 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".question.QuestionActivity">
 
-    <include layout="@layout/layout_toolbar" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar" />
+
+    <ImageView
+        android:id="@+id/image_question"
+        style="@style/QuestionImageStyle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.7" />
+
+    <ProgressBar
+        android:id="@+id/image_loading_progress_bar"
+        style="@style/QuestionProgressBarLoadingImageStyle"
+        app:layout_constraintBottom_toBottomOf="@id/image_question"
+        app:layout_constraintEnd_toEndOf="@id/image_question"
+        app:layout_constraintStart_toStartOf="@id/image_question"
+        app:layout_constraintTop_toTopOf="@id/image_question" />
 
     <TextView
         android:id="@+id/progress_questions"
@@ -15,9 +35,9 @@
         android:layout_height="wrap_content"
         android:text="3 / 6"
         android:textAppearance="@style/AppTextAppearance.Question.ProgressHeader"
-        app:layout_constraintBottom_toTopOf="@id/title_question"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/image_question"
+        app:layout_constraintEnd_toEndOf="@id/image_question"
+        app:layout_constraintStart_toStartOf="@id/image_question" />
 
     <TextView
         android:id="@+id/title_question"
@@ -26,36 +46,20 @@
         android:layout_height="wrap_content"
         android:text="Who is the character? This is a long question to see how multiple lines behave"
         android:textAppearance="@style/AppTextAppearance.Question.Title"
-        app:layout_constraintBottom_toTopOf="@id/image_question"
+        app:layout_constraintBottom_toTopOf="@id/group_questions"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/image_question" />
 
-    <ImageView
-        android:id="@+id/image_question"
-        style="@style/QuestionImageStyle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.35" />
-
-    <ProgressBar
-        android:id="@+id/image_loading_progress_bar"
-        style="@style/QuestionProgressBarLoadingImageStyle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.35" />
 
     <RadioGroup
         android:id="@+id/group_questions"
         style="@style/QuestionAnswersGroupStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image_question">
+        app:layout_constraintStart_toEndOf="@id/image_question"
+        app:layout_constraintTop_toTopOf="parent">
 
     </RadioGroup>
 
@@ -66,6 +70,6 @@
         android:layout_height="wrap_content"
         android:text="@string/activity_question_send_button_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/image_question"
         app:layout_constraintTop_toBottomOf="@+id/group_questions" />
 </androidx.constraintlayout.widget.ConstraintLayout>

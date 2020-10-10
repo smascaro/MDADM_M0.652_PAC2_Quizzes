@@ -18,18 +18,28 @@ class ResultActivity : AppCompatActivity() {
         UNKOWN, RIGHT_ANSWER, WRONG_ANSWER, FINISHED_QUIZZ
     }
 
+    private sealed class State {
+        class RightAnswer : State()
+        class WrongAnswer : State()
+        class FinishedQuizz : State()
+    }
+
     private lateinit var progressManager: QuizzProgressManager
     private lateinit var currentQuestion: Question
-    private var state: ResultState = ResultState.UNKOWN
+    private lateinit var state: State
+
     override fun onCreate(savedInstanceState: Bundle?) {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
         progressManager = (application as QuizzApplication).progressManager
+        initializeCurrentQuestion()
+        handleAnswer()
+    }
+
+    private fun initializeCurrentQuestion() {
         val currentQuestionIndex = progressManager.getCurrentQuestionIndex()
         currentQuestion = QuizzQuestions.questions[currentQuestionIndex]
-
-        handleAnswer()
     }
 
     private fun handleAnswer() {
@@ -55,33 +65,40 @@ class ResultActivity : AppCompatActivity() {
         progressManager.registerAttempt(currentQuestion)
         val nextQuestionIndex = progressManager.next()
         if (nextQuestionIndex >= QuizzQuestions.questions.size) {
-            state = ResultState.FINISHED_QUIZZ
-            progressManager.reset()
+            state = State.FinishedQuizz()
         } else {
-            state = ResultState.RIGHT_ANSWER
+            state = State.RightAnswer()
         }
         initializeUi()
+        if (state is State.FinishedQuizz) {
+            progressManager.reset()
+        }
     }
 
     private fun handleWrongAnswer() {
-        state = ResultState.WRONG_ANSWER
+        state = State.WrongAnswer()
         progressManager.registerAttempt(currentQuestion)
         initializeUi()
     }
 
     private fun initializeUi() {
         when (state) {
-            ResultState.RIGHT_ANSWER -> initializeViewsRightAnswer()
-            ResultState.WRONG_ANSWER -> initializeViewsWrongAnswer()
-            ResultState.FINISHED_QUIZZ -> initializeViewsQuizzFinished()
-            ResultState.UNKOWN -> {
-            }
+            is State.RightAnswer -> initializeViewsRightAnswer()
+            is State.WrongAnswer -> initializeViewsWrongAnswer()
+            is State.FinishedQuizz -> initializeViewsQuizzFinished()
         }
     }
 
     private fun initializeViewsQuizzFinished() {
         result_message.setText(R.string.activity_result_message_finished_quizz_text)
         result_image.setImageResource(R.drawable.ic_finished_quiz)
+        val attempts = progressManager.getTotalAttempts()
+        val accuracy = (QuizzQuestions.questions.size.toDouble() / attempts.toDouble()) * 100
+        result_attempts.text = resources.getString(
+            R.string.activity_result_attempts_count_finished_quizz_text,
+            attempts,
+            accuracy
+        )
         result_button_start_again.visibility = View.VISIBLE
         result_button_start_again.setOnClickListener { goToQuestion() }
     }
@@ -119,20 +136,18 @@ class ResultActivity : AppCompatActivity() {
 
     private fun handleTransitions() {
         when (state) {
-            ResultState.RIGHT_ANSWER -> overridePendingTransition(
+            is State.RightAnswer -> overridePendingTransition(
                 R.anim.slide_in_right,
                 R.anim.slide_out_left
             )
-            ResultState.WRONG_ANSWER -> overridePendingTransition(
+            is State.WrongAnswer -> overridePendingTransition(
                 R.anim.slide_in_left,
                 R.anim.slide_out_right
             )
-            ResultState.FINISHED_QUIZZ -> overridePendingTransition(
+            is State.FinishedQuizz -> overridePendingTransition(
                 android.R.anim.fade_in,
                 android.R.anim.fade_out
             )
-            ResultState.UNKOWN -> {
-            }
         }
     }
 }

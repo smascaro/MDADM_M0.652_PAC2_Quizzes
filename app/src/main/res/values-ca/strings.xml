@@ -1,0 +1,22 @@
+<resources>
+    <string name="activity_question_send_button_text">Enviar</string>
+    <string name="activity_question_no_answer_selected">No s\'ha seleccionat cap resposta</string>
+    <string name="activity_question_restart_dialog_title">Estàs segur que vols tornar a començar la quizz?</string>
+    <string name="activity_question_restart_dialog_message">Si segueixes amb aquesta acció perderàs tot el teu progrés.</string>
+    <string name="activity_question_restart_dialog_positive">Si</string>
+    <string name="activity_question_restart_dialog_negative">No</string>
+    <string name="activity_result_next_question_button_text">Següent</string>
+    <string name="activity_result_try_again_button_text">Torna-ho a intentar</string>
+    <string name="activity_result_start_again_button_text">Tornar a començar</string>
+    <string name="activity_result_message_finished_quizz_text">Felicitats!!\nHas acabat la lliçó!</string>
+    <string name="activity_result_message_right_answer_text">Has encertat!</string>
+    <string name="activity_result_message_wrong_answer_text">FATAL!! BOO!</string>
+    <string name="activity_result_attempts_count_wrong_answer_text">Recompte d\'errades: %1$d</string>
+    <string name="activity_result_unexpected">Ha passat alguna cosa inesperada, si us plau torna-ho a intentar</string>
+    <plurals name="activity_result_attempts_count_right_answer_text">
+        <item quantity="one">Has encertat a LA PRIMERA!!</item>
+        <item quantity="other">Has encertat en %d intents!</item>
+    </plurals>
+    <string name="activity_result_attempts_count_finished_quizz_text">Total intents: %1$d (%2$.1f%% d\'encerts)</string>
+    <string name="question_activity_image_loading_error_message">No s\'ha pogut carregar la imatge, comprova que tinguis connexió a Internet</string>
+</resources>

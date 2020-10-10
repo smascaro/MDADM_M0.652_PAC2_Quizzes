@@ -1,22 +1,24 @@
 <resources>
-    <string name="app_name">Quizzes</string>
-    <string name="activity_question_send_button_text">Send</string>
-    <string name="activity_question_no_answer_selected">No answer has been selected</string>
-    <string name="activity_question_progress_template">%1$d / %2$d</string>
-    <string name="activity_question_restart_dialog_title">"Are you sure you want to restart the quiz?"</string>
-    <string name="activity_question_restart_dialog_message">If you continue with this action you will lose all your progress.</string>
-    <string name="activity_question_restart_dialog_positive">Yes</string>
+    <string name="app_name" translatable="false">Quizzes</string>
+    <string name="activity_question_send_button_text">Enviar</string>
+    <string name="activity_question_no_answer_selected">No se ha seleccionado ninguna respuesta</string>
+    <string name="activity_question_progress_template" translatable="false">%1$d / %2$d</string>
+    <string name="activity_question_restart_dialog_title">¿Estás seguro que quieres volver a empezar la quiz?</string>
+    <string name="activity_question_restart_dialog_message">Si sigues con la acción perderás todo tu progreso.</string>
+    <string name="activity_question_restart_dialog_positive">Si</string>
     <string name="activity_question_restart_dialog_negative">No</string>
-    <string name="activity_result_next_question_button_text">Next</string>
-    <string name="activity_result_try_again_button_text">Try again</string>
-    <string name="activity_result_start_again_button_text">Start again</string>
-    <string name="activity_result_message_finished_quizz_text">Congratulations!!\nYou have finished the lesson!</string>
-    <string name="activity_result_message_right_answer_text">That is correct!</string>
-    <string name="activity_result_message_wrong_answer_text">WRONG!! BOO!</string>
-    <string name="activity_result_attempts_count_wrong_answer_text">Fail count: %1$d</string>
-    <string name="activity_result_unexpected">Something unexpected happened, please try again</string>
+    <string name="activity_result_next_question_button_text">Siguiente</string>
+    <string name="activity_result_try_again_button_text">Intentar de nuevo</string>
+    <string name="activity_result_start_again_button_text">Volver a empezar</string>
+    <string name="activity_result_message_finished_quizz_text">¡¡Felicidades!!\n¡Has completado la lección!</string>
+    <string name="activity_result_message_right_answer_text">¡¡Correcto!!</string>
+    <string name="activity_result_message_wrong_answer_text">¡¡FATAL!! ¡BOO!</string>
+    <string name="activity_result_attempts_count_wrong_answer_text">Recuento de fallos: %1$d</string>
+    <string name="activity_result_attempts_count_finished_quizz_text">Total intentos: %1$d (%2$.1f%% de aciertos)</string>
+    <string name="activity_result_unexpected">Ha ocurrido un error inesperado, por favor vuélvelo a intentar</string>
+    <string name="question_activity_image_loading_error_message">No se ha podido cargar la imagen, comprueba que tengas conexión a Internet</string>
     <plurals name="activity_result_attempts_count_right_answer_text">
-        <item quantity="one">"You did it FIRST TRY!!"</item>
-        <item quantity="other">"You did it in %d attempts!"</item>
+        <item quantity="one">¡¡Acertaste a LA PRIMERA!!</item>
+        <item quantity="other">¡Lo acertaste en %d intentos!</item>
     </plurals>
 </resources>
