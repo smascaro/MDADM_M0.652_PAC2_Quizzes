@@ -21,12 +21,17 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.activity_question.*
 import kotlinx.android.synthetic.main.layout_toolbar.toolbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import uoc.quizz.QuizzApplication
 import uoc.quizz.R
 import uoc.quizz.common.Answer
 import uoc.quizz.common.Question
 import uoc.quizz.common.QuizzProgressManager
 import uoc.quizz.common.QuizzQuestions
+import uoc.quizz.repository.DatabaseInstanceProvider
 import uoc.quizz.result.ResultActivity
 
 //region Region: Constants
@@ -50,6 +55,14 @@ class QuestionActivity : AppCompatActivity() {
         initializeQuestionImage()
         initializeQuestionAnswers()
         initializeSendButton()
+        testDatabase()
+    }
+
+    private fun testDatabase() {
+        CoroutineScope(Job() + Dispatchers.IO).launch {
+            val questions = DatabaseInstanceProvider.getInstance(this@QuestionActivity).questionsDao().getAll()
+            println("${questions.size} questions obtained from database: $questions")
+        }
     }
 
     private fun initializeCurrentQuestion() {
