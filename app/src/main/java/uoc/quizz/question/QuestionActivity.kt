@@ -36,6 +36,7 @@ import uoc.quizz.result.ResultActivity
 //region Region: Constants
 const val QUESTION_RESULT_INTENT_EXTRA_SELECTED_ANSWER_ID =
     "QUESTION_RESULT_INTENT_EXTRA_SELECTED_ANSWER_ID"
+
 //endregion
 class QuestionActivity : AppCompatActivity() {
     private lateinit var currentQuestion: uoc.quizz.data.entity.Question
