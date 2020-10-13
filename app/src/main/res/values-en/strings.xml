@@ -17,6 +17,6 @@
         <item quantity="one">You did it FIRST TRY!!</item>
         <item quantity="other">You did it in %d attempts!</item>
     </plurals>
-    <string name="activity_result_attempts_count_finished_quizz_text">Total attempts: %1d$ (%2$.1f%% accuracy)</string>
+    <string name="activity_result_attempts_count_finished_quizz_text">Total attempts: %1$d (%2$.1f%% accuracy)</string>
     <string name="question_activity_image_loading_error_message">The image could not be loaded, check your Internet connection</string>
 </resources>

@@ -1,4 +1,4 @@
-package uoc.quizz.repository.entity
+package uoc.quizz.data.entity
 
 import androidx.room.*
 import com.google.gson.Gson
@@ -22,19 +22,23 @@ data class Question(
     val rightAnswerId: Int,
     @ColumnInfo(name = "image_url")
     val imageUrl: String
-)
+) {
+    fun getLocalizedTitle(iso6391Language: String): String {
+        return when (iso6391Language) {
+            "ca" -> titleCa
+            "en" -> titleEn
+            else -> titleDefault
+        }
+    }
+}
 
 class AnswersConverter {
     var gson = Gson()
 
     @TypeConverter
     fun fromJson(data: String): List<Answer> {
-        if (data == null) {
-            return listOf()
-        } else {
-            val answerListType = object : TypeToken<List<Answer>>() {}.type
-            return gson.fromJson(data, answerListType)
-        }
+        val answerListType = object : TypeToken<List<Answer>>() {}.type
+        return gson.fromJson(data, answerListType)
     }
 
     @TypeConverter

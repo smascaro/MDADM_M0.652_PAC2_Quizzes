@@ -1,7 +1,11 @@
 package uoc.quizz.common
 
-import android.content.Context
-import android.content.SharedPreferences
+import uoc.quizz.data.entity.Question
+import uoc.quizz.data.entity.QuestionItem
+import uoc.quizz.data.entity.Quiz
+import uoc.quizz.data.repository.QuestionRepository
+import uoc.quizz.data.repository.QuizRepository
+import uoc.quizz.data.repository.RepositoryProvider
 
 // region Region: Constants
 private const val QUIZZ_QUESTIONS_SHARED_PREFS_NAME = "QUIZZ_QUESTIONS_SHARED_PREFS"
@@ -10,70 +14,91 @@ private const val QUIZZ_QUESTIONS_SHARED_PREFS_QUESTION_INDEX =
 private const val QUIZZ_QUESTIONS_ATTEMPTS_SHARED_PREFS_NAME =
     "QUIZZ_QUESTIONS_ATTEMPTS_SHARED_PREFS_NAME"
 // endregion
-
 /**
  * Helper class that manages quizz progress state
  */
-class QuizzProgressManager(private val context: Context) {
-    private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences(QUIZZ_QUESTIONS_SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+object QuizzProgressManager {
+    private val quizzRepository: QuizRepository by lazy { RepositoryProvider.provideQuizRepository() }
+    private val questionRepository: QuestionRepository by lazy { RepositoryProvider.provideQuestionsRepository() }
 
     /**
-     *  This separate SharedPreferences will let us keep track of attempts for each question.
+     * Return current question that must be answered from the quiz in argument.
      */
-    private val attemptsSharedPreferences: SharedPreferences =
-        context.getSharedPreferences(
-            QUIZZ_QUESTIONS_ATTEMPTS_SHARED_PREFS_NAME,
-            Context.MODE_PRIVATE
-        )
-
-    /**
-     * Returns current question index
-     */
-    fun getCurrentQuestionIndex(): Int {
-        return sharedPreferences.getInt(QUIZZ_QUESTIONS_SHARED_PREFS_QUESTION_INDEX, 0)
+    suspend fun getCurrentQuestion(currentQuiz: Quiz): Question {
+        val currentQuestionId = currentQuiz.questions.first { !it.completed }.id
+        return getQuestionById(currentQuestionId)
     }
 
     /**
-     * Update current question index and returns it
+     * Return current quiz that is being played or a new one if there is none.
      */
-    fun next(): Int {
-        val nextIndex = getCurrentQuestionIndex() + 1
-        sharedPreferences.edit().putInt(QUIZZ_QUESTIONS_SHARED_PREFS_QUESTION_INDEX, nextIndex)
-            .apply()
-        return nextIndex
+    suspend fun getCurrentQuiz(): Quiz {
+        return getUnfinishedQuiz() ?: makeNewQuiz()
     }
 
     /**
-     * Register an attempt (either a success or failure) for the question passed as argument.
+     * Return the index of a question within a quiz
      */
-    fun registerAttempt(question: Question) {
-        val currentAttemptsCount = attemptsSharedPreferences.getInt(question.key, 0)
-        attemptsSharedPreferences.edit().putInt(question.key, currentAttemptsCount + 1).apply()
+    fun getQuestionIndex(currentQuiz: Quiz, question: Question): Int {
+        return currentQuiz.questions.indexOfFirst { it.id == question.id }
     }
 
     /**
-     * Returns total count of attempts for the question passed as argument.
+     * Retrieve the only quiz in database that is not marked as finished
      */
-    fun getAttemptsCount(question: Question): Int {
-        return attemptsSharedPreferences.getInt(question.key, 0)
+    private suspend fun getUnfinishedQuiz(): Quiz? {
+        return quizzRepository.getUnfinished()
     }
 
     /**
-     * Returns total count of attempts for all questions answered. That is the sum of all individual answers attempts.
+     * Retrieve a Question object from its unique identifier
      */
-    fun getTotalAttempts(): Int {
-        return attemptsSharedPreferences.all.values.filter { it != null && it.isInt() }
-            .toListOf<Int>().reduce { acc, element ->
-                acc + element
-            }
+    private suspend fun getQuestionById(questionId: Int): Question {
+        return questionRepository.getById(questionId)
+    }
+
+    /**
+     * Create and store a new Quiz object in database
+     */
+    private suspend fun makeNewQuiz(): Quiz {
+        val questions = questionRepository.getAll()
+        val quiz = Quiz(questions = questions.shuffled().map {
+            QuestionItem(it.id, 0, false)
+        })
+        return quizzRepository.insert(quiz)
+    }
+
+    /**
+     * Mark current question as completed
+     */
+    suspend fun next(quiz: Quiz) {
+        quiz.questions.first { !it.completed }.completed = true
+        quizzRepository.update(quiz)
+    }
+
+    /**
+     * Register an attempt (either a success or failure) for the question in current quiz
+     */
+    suspend fun registerAttempt(currentQuiz: Quiz, question: Question) {
+        currentQuiz.questions.first { it.id == question.id }.attemptsCount++
+        quizzRepository.update(currentQuiz)
+    }
+
+    /**
+     * Returns total count of attempts for the question in current quiz
+     */
+    fun getAttemptsCount(
+        currentQuiz: Quiz,
+        question: Question
+    ): Int {
+        return currentQuiz.questions.first { it.id == question.id }.attemptsCount
     }
 
     /**
      * Restore state of the quizz to initial state.
      */
-    fun reset() {
-        sharedPreferences.edit().clear().apply()
-        attemptsSharedPreferences.edit().clear().apply()
+    suspend fun reset(currentQuiz: Quiz) {
+        currentQuiz.finished = true
+        quizzRepository.update(currentQuiz)
     }
 }

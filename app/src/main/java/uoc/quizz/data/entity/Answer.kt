@@ -1,4 +1,4 @@
-package uoc.quizz.repository.entity
+package uoc.quizz.data.entity
 
 data class Answer(
     val id: Int,
