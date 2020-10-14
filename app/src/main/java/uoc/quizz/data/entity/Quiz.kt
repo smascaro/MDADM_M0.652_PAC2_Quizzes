@@ -39,6 +39,9 @@ data class QuestionItem(
     var completed: Boolean
 )
 
+/**
+ * Class that will convert from [String] to List of [QuestionItem] objects to store them as json strings in Room database
+ */
 class QuestionItemConverter {
     private val gson = Gson()
 

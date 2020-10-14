@@ -36,6 +36,7 @@ class ResultActivity : AppCompatActivity() {
     private lateinit var state: State
     private val io = CoroutineScope(Dispatchers.IO)
     private val ui = CoroutineScope(Dispatchers.Main)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         super.onCreate(savedInstanceState)
@@ -47,6 +48,9 @@ class ResultActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Handle state when orientation changes
+     */
     private fun handleSavedState(savedInstanceState: Bundle) = ui.launch {
         println("Saved instance state: $savedInstanceState")
         val intentHandled = savedInstanceState.getBoolean(RESULT_INTENT_ALREADY_HANDLED, false)

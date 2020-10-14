@@ -22,10 +22,10 @@ object QuizzProgressManager {
     private val questionRepository: QuestionRepository by lazy { RepositoryProvider.provideQuestionsRepository() }
 
     /**
-     * Return current question that must be answered from the quiz in argument.
+     * Return current question that must be answered from [quiz].
      */
-    suspend fun getCurrentQuestion(currentQuiz: Quiz): Question {
-        val currentQuestionId = currentQuiz.questions.first { !it.completed }.id
+    suspend fun getCurrentQuestion(quiz: Quiz): Question {
+        val currentQuestionId = quiz.questions.first { !it.completed }.id
         return getQuestionById(currentQuestionId)
     }
 
@@ -37,14 +37,14 @@ object QuizzProgressManager {
     }
 
     /**
-     * Return the index of a question within a quiz
+     * Return the index of a [question] within a [quiz]
      */
-    fun getQuestionIndex(currentQuiz: Quiz, question: Question): Int {
-        return currentQuiz.questions.indexOfFirst { it.id == question.id }
+    fun getQuestionIndex(quiz: Quiz, question: Question): Int {
+        return quiz.questions.indexOfFirst { it.id == question.id }
     }
 
     /**
-     * Retrieve the only quiz in database that is not marked as finished
+     * Retrieve the only quiz in database that is not marked as finished, null if there is none
      */
     private suspend fun getUnfinishedQuiz(): Quiz? {
         return quizzRepository.getUnfinished()
@@ -58,7 +58,8 @@ object QuizzProgressManager {
     }
 
     /**
-     * Create and store a new Quiz object in database
+     * Create and store a new Quiz object in database.
+     * @return the new inserted [Quiz] object
      */
     private suspend fun makeNewQuiz(): Quiz {
         val questions = questionRepository.getAll()
@@ -77,7 +78,7 @@ object QuizzProgressManager {
     }
 
     /**
-     * Register an attempt (either a success or failure) for the question in current quiz
+     * Register an attempt (either a success or failure) for the [question] in [currentQuiz]
      */
     suspend fun registerAttempt(currentQuiz: Quiz, question: Question) {
         currentQuiz.questions.first { it.id == question.id }.attemptsCount++
@@ -85,7 +86,7 @@ object QuizzProgressManager {
     }
 
     /**
-     * Returns total count of attempts for the question in current quiz
+     * Returns total count of attempts for the [question] in [currentQuiz]
      */
     fun getAttemptsCount(
         currentQuiz: Quiz,
@@ -95,7 +96,7 @@ object QuizzProgressManager {
     }
 
     /**
-     * Restore state of the quizz to initial state.
+     * Restore state of the quizz to finished state.
      */
     suspend fun reset(currentQuiz: Quiz) {
         currentQuiz.finished = true

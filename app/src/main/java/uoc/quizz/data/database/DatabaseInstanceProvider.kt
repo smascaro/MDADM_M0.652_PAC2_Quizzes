@@ -15,13 +15,14 @@ import uoc.quizz.data.entity.Question
 
 object DatabaseInstanceProvider {
     private var instance: QuestionsDatabase? = null
+    private val io = CoroutineScope(Dispatchers.IO)
     private val databaseCreationCallback = object : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             prepopulateData()
         }
     }
-    val io = CoroutineScope(Dispatchers.IO)
+
     fun create(context: Context): QuestionsDatabase {
         if (instance == null) {
             instance = Room.databaseBuilder(

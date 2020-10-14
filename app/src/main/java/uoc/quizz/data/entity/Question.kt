@@ -37,6 +37,9 @@ data class Question(
     }
 }
 
+/**
+ * Class that will convert from String to List of Answer objects to store them as json strings in Room database
+ */
 class AnswersConverter {
     var gson = Gson()
 
