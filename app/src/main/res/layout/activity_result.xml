@@ -8,7 +8,6 @@
         android:id="@+id/result_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/activity_result_message_finished_quizz_text"
         android:textAppearance="@style/AppTextAppearance.Result.Message"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/result_image"
@@ -18,7 +17,6 @@
     <ImageView
         android:id="@+id/result_image"
         style="@style/ResultImageStyle"
-        android:src="@drawable/ic_wrong_answer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +26,6 @@
         android:id="@+id/result_attempts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/activity_result_attempts_count_wrong_answer_text"
         android:layout_marginTop="24dp"
         android:textAppearance="@style/AppTextAppearance.Result.Attempts"
         app:layout_constraintEnd_toEndOf="parent"
