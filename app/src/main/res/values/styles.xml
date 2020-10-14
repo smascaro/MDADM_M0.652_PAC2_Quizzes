@@ -75,6 +75,7 @@
 
     <style name="ResultTryAgainButtonStyle" parent="ButtonBase.Result.BlackText">
         <item name="android:backgroundTint" tools:targetApi="lollipop">#FFC75F</item>
+        <item name="android:layout_marginTop">24dp</item>
     </style>
 
     <style name="ResultNextQuestionButtonStyle" parent="ButtonBase.Result.WhiteText">
