@@ -21,44 +21,64 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.activity_question.*
 import kotlinx.android.synthetic.main.layout_toolbar.toolbar
-import uoc.quizz.QuizzApplication
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import uoc.quizz.R
-import uoc.quizz.common.Answer
-import uoc.quizz.common.Question
 import uoc.quizz.common.QuizzProgressManager
 import uoc.quizz.common.QuizzQuestions
+import uoc.quizz.data.entity.Quiz
+import uoc.quizz.data.repository.QuestionRepository
+import uoc.quizz.data.repository.QuizRepository
+import uoc.quizz.data.repository.RepositoryProvider
 import uoc.quizz.result.ResultActivity
 
 //region Region: Constants
 const val QUESTION_RESULT_INTENT_EXTRA_SELECTED_ANSWER_ID =
     "QUESTION_RESULT_INTENT_EXTRA_SELECTED_ANSWER_ID"
-//endregion
 
+//endregion
 class QuestionActivity : AppCompatActivity() {
-    private lateinit var progressManager: QuizzProgressManager
-    private lateinit var currentQuestion: Question
+    private lateinit var currentQuestion: uoc.quizz.data.entity.Question
+    private lateinit var currentQuiz: Quiz
+    private val io = CoroutineScope(Dispatchers.IO)
+    private val ui = CoroutineScope(Dispatchers.Main)
+    private var questionsRepository: QuestionRepository? = null
+    private var quizRepository: QuizRepository? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_question)
 
         this.setSupportActionBar(toolbar)
-        progressManager = (application as QuizzApplication).progressManager
 
-        initializeCurrentQuestion()
-        initializeQuestionProgress()
-        initializeQuestionTitle()
-        initializeQuestionImage()
-        initializeQuestionAnswers()
-        initializeSendButton()
+        questionsRepository = RepositoryProvider.provideQuestionsRepository()
+        quizRepository = RepositoryProvider.provideQuizRepository()
+
+        initializeUi()
     }
 
-    private fun initializeCurrentQuestion() {
-        val currentQuestionId = progressManager.getCurrentQuestionIndex()
-        currentQuestion = QuizzQuestions.questions[currentQuestionId]
+    private fun initializeUi() = io.launch {
+        initializeCurrentQuiz()
+        initializeCurrentQuestion()
+        ui.launch {
+            initializeQuestionProgress()
+            initializeQuestionTitle()
+            initializeQuestionImage()
+            initializeQuestionAnswers()
+            initializeSendButton()
+        }
+    }
+
+    private suspend fun initializeCurrentQuiz() {
+        currentQuiz = QuizzProgressManager.getCurrentQuiz()
+    }
+
+    private suspend fun initializeCurrentQuestion() {
+        currentQuestion = QuizzProgressManager.getCurrentQuestion(currentQuiz)
     }
 
     private fun initializeQuestionProgress() {
-        val questionIndex = progressManager.getCurrentQuestionIndex()
+        val questionIndex = QuizzProgressManager.getQuestionIndex(currentQuiz, currentQuestion)
         progress_questions.text =
             resources.getString(
                 R.string.activity_question_progress_template,
@@ -106,7 +126,6 @@ class QuestionActivity : AppCompatActivity() {
                     image_loading_progress_bar.visibility = View.GONE
                     return false
                 }
-
             })
             .into(image_question)
     }
@@ -132,7 +151,7 @@ class QuestionActivity : AppCompatActivity() {
         }
     }
 
-    private fun makeAnswerRadioButton(answer: Answer): AppCompatRadioButton {
+    private fun makeAnswerRadioButton(answer: uoc.quizz.data.entity.Answer): AppCompatRadioButton {
         val params = RadioGroup.LayoutParams(
             RadioGroup.LayoutParams.WRAP_CONTENT,
             RadioGroup.LayoutParams.WRAP_CONTENT
@@ -197,7 +216,7 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun restartQuizz() {
-        (application as QuizzApplication).progressManager.reset()
+        io.launch { QuizzProgressManager.reset(currentQuiz) }
         val intent = Intent(this, QuestionActivity::class.java)
         startActivity(intent)
         finish()
