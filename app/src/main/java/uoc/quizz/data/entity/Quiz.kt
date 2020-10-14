@@ -4,7 +4,12 @@ import androidx.room.*
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
+import java.io.Serializable
 
+// region Region: Constants
+const val QUIZ_SERIALIZE_EXTRA = "QUIZ_SERIALIZE_EXTRA"
+
+// endregion
 @Entity(tableName = "quizzes")
 @TypeConverters(QuestionItemConverter::class)
 data class Quiz(
@@ -15,7 +20,7 @@ data class Quiz(
     val questions: List<QuestionItem>,
     @ColumnInfo(name = "finished")
     var finished: Boolean = false
-) {
+) : Serializable {
     fun hasQuizzFinished(): Boolean {
         return questions.all { it.completed }
     }

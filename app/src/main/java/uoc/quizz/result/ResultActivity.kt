@@ -12,17 +12,26 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uoc.quizz.R
 import uoc.quizz.common.QuizzProgressManager
+import uoc.quizz.data.entity.QUESTION_SERIALIZE_EXTRA
+import uoc.quizz.data.entity.QUIZ_SERIALIZE_EXTRA
+import uoc.quizz.data.entity.Question
 import uoc.quizz.data.entity.Quiz
 import uoc.quizz.question.QuestionActivity
+import java.io.Serializable
 
+// region Region: Constants
+const val RESULT_INTENT_ALREADY_HANDLED = "RESULT_INTENT_ALREADY_HANDLED"
+const val RESULT_ANSWER_STATE = "RESULT_ANSWER_STATE"
+
+// endregion
 class ResultActivity : AppCompatActivity() {
-    private sealed class State {
+    private sealed class State : Serializable {
         object RightAnswer : State()
         object WrongAnswer : State()
         object FinishedQuizz : State()
     }
 
-    private lateinit var currentQuestion: uoc.quizz.data.entity.Question
+    private lateinit var currentQuestion: Question
     private lateinit var currentQuiz: Quiz
     private lateinit var state: State
     private val io = CoroutineScope(Dispatchers.IO)
@@ -31,7 +40,37 @@ class ResultActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
-        initialize()
+        if (savedInstanceState == null) {
+            initialize()
+        } else {
+            handleSavedState(savedInstanceState)
+        }
+    }
+
+    private fun handleSavedState(savedInstanceState: Bundle) = ui.launch {
+        println("Saved instance state: $savedInstanceState")
+        val intentHandled = savedInstanceState.getBoolean(RESULT_INTENT_ALREADY_HANDLED, false)
+        val currentQuestionFromSavedState = savedInstanceState.getSerializable(
+            QUESTION_SERIALIZE_EXTRA
+        ) as Question?
+        val currentQuizFromSavedState = savedInstanceState.getSerializable(
+            QUIZ_SERIALIZE_EXTRA
+        ) as Quiz?
+        val answerStateFromSavedState = savedInstanceState.getSerializable(
+            RESULT_ANSWER_STATE
+        ) as State?
+        if (intentHandled && currentQuestionFromSavedState != null && currentQuizFromSavedState != null && answerStateFromSavedState != null) {
+            currentQuiz = currentQuizFromSavedState
+            currentQuestion = currentQuestionFromSavedState
+            state = answerStateFromSavedState
+            initializeUi()
+        } else {
+            Toast.makeText(
+                this@ResultActivity,
+                R.string.activity_result_unexpected,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     private fun initialize() = io.launch {
@@ -166,5 +205,13 @@ class ResultActivity : AppCompatActivity() {
                 android.R.anim.fade_out
             )
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(QUESTION_SERIALIZE_EXTRA, currentQuestion)
+        outState.putSerializable(QUIZ_SERIALIZE_EXTRA, currentQuiz)
+        outState.putBoolean(RESULT_INTENT_ALREADY_HANDLED, true)
+        outState.putSerializable(RESULT_ANSWER_STATE, state)
     }
 }
