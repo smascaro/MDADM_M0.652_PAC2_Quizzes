@@ -1,7 +1,7 @@
 package uoc.quizz.data.repository
 
-import uoc.quizz.data.dao.QuestionsDao
-import uoc.quizz.data.entity.Question
+import uoc.quizz.data.repository.dao.QuestionsDao
+import uoc.quizz.data.repository.entity.Question
 
 class QuestionRepository(private val dao: QuestionsDao) {
     suspend fun getAll(): List<Question> {

@@ -1,7 +1,10 @@
 package uoc.quizz.data.repository
 
-import uoc.quizz.data.database.DatabaseInstanceProvider
+import uoc.quizz.data.repository.database.DatabaseInstanceProvider
 
+/**
+ * Provide repository instances
+ */
 object RepositoryProvider {
     private var questionRepository: QuestionRepository? = null
     private var quizRepository: QuizRepository? = null

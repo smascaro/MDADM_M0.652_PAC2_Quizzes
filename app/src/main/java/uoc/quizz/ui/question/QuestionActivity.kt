@@ -1,4 +1,4 @@
-package uoc.quizz.question
+package uoc.quizz.ui.question
 
 import android.content.Intent
 import android.graphics.drawable.Drawable
@@ -25,13 +25,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import uoc.quizz.R
-import uoc.quizz.common.QuizzProgressManager
-import uoc.quizz.common.QuizzQuestions
-import uoc.quizz.data.entity.Quiz
+import uoc.quizz.data.questions.QuizzProgressManager
+import uoc.quizz.data.questions.QuizzQuestions
 import uoc.quizz.data.repository.QuestionRepository
 import uoc.quizz.data.repository.QuizRepository
 import uoc.quizz.data.repository.RepositoryProvider
-import uoc.quizz.result.ResultActivity
+import uoc.quizz.data.repository.entity.Quiz
+import uoc.quizz.ui.result.ResultActivity
 
 //region Region: Constants
 const val QUESTION_RESULT_INTENT_EXTRA_SELECTED_ANSWER_ID =
@@ -39,7 +39,7 @@ const val QUESTION_RESULT_INTENT_EXTRA_SELECTED_ANSWER_ID =
 
 //endregion
 class QuestionActivity : AppCompatActivity() {
-    private lateinit var currentQuestion: uoc.quizz.data.entity.Question
+    private lateinit var currentQuestion: uoc.quizz.data.repository.entity.Question
     private lateinit var currentQuiz: Quiz
     private val io = CoroutineScope(Dispatchers.IO)
     private val ui = CoroutineScope(Dispatchers.Main)
@@ -85,6 +85,14 @@ class QuestionActivity : AppCompatActivity() {
                 questionIndex + 1,
                 QuizzQuestions.questions.size
             )
+        progress_seekbar.apply {
+            max = QuizzQuestions.questions.size
+            progress = questionIndex + 1
+            setOnTouchListener { _, _ -> true }
+            thumb = thumb.mutate().apply {
+                alpha = 0
+            }
+        }
     }
 
     private fun initializeQuestionTitle() {
@@ -151,7 +159,7 @@ class QuestionActivity : AppCompatActivity() {
         }
     }
 
-    private fun makeAnswerRadioButton(answer: uoc.quizz.data.entity.Answer): AppCompatRadioButton {
+    private fun makeAnswerRadioButton(answer: uoc.quizz.data.repository.entity.Answer): AppCompatRadioButton {
         val params = RadioGroup.LayoutParams(
             RadioGroup.LayoutParams.WRAP_CONTENT,
             RadioGroup.LayoutParams.WRAP_CONTENT

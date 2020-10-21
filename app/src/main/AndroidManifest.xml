@@ -11,14 +11,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".QuizzApplication">
-        <activity android:name=".question.QuestionActivity">
+        <activity android:name="uoc.quizz.ui.question.QuestionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".result.ResultActivity" />
+        <activity android:name="uoc.quizz.ui.result.ResultActivity" />
     </application>
 
 </manifest>

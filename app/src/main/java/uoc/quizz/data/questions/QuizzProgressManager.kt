@@ -1,11 +1,11 @@
-package uoc.quizz.common
+package uoc.quizz.data.questions
 
-import uoc.quizz.data.entity.Question
-import uoc.quizz.data.entity.QuestionItem
-import uoc.quizz.data.entity.Quiz
 import uoc.quizz.data.repository.QuestionRepository
 import uoc.quizz.data.repository.QuizRepository
 import uoc.quizz.data.repository.RepositoryProvider
+import uoc.quizz.data.repository.entity.Question
+import uoc.quizz.data.repository.entity.QuestionItem
+import uoc.quizz.data.repository.entity.Quiz
 
 // region Region: Constants
 private const val QUIZZ_QUESTIONS_SHARED_PREFS_NAME = "QUIZZ_QUESTIONS_SHARED_PREFS"

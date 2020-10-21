@@ -1,4 +1,4 @@
-package uoc.quizz.data.entity
+package uoc.quizz.data.repository.entity
 
 import androidx.room.*
 import com.google.gson.Gson
