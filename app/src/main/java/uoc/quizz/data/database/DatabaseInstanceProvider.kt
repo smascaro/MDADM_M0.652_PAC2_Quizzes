@@ -10,8 +10,6 @@ import kotlinx.coroutines.launch
 import uoc.quizz.common.QuizzQuestions
 import uoc.quizz.data.dao.QuestionsDao
 import uoc.quizz.data.dao.QuizzesDao
-import uoc.quizz.data.entity.Answer
-import uoc.quizz.data.entity.Question
 
 object DatabaseInstanceProvider {
     private var instance: QuestionsDatabase? = null
@@ -61,15 +59,7 @@ object DatabaseInstanceProvider {
         val dao = instance?.questionsDao()
         if (dao != null) {
             QuizzQuestions.questions.forEach {
-                val q = Question(
-                    titleDefault = it.getLocalizedTitle("es"),
-                    titleCa = it.getLocalizedTitle("ca"),
-                    titleEn = it.getLocalizedTitle("en"),
-                    answers = it.answers.map { answer -> Answer(answer.id, answer.text) },
-                    imageUrl = it.imageUrl,
-                    rightAnswerId = it.rightAnswerId
-                )
-                val questionId = dao.insert(q)
+                val questionId = dao.insert(it)
                 println("Question inserted with id $questionId")
             }
         }
