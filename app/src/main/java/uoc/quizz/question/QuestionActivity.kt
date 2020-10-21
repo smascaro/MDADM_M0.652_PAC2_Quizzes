@@ -85,6 +85,14 @@ class QuestionActivity : AppCompatActivity() {
                 questionIndex + 1,
                 QuizzQuestions.questions.size
             )
+        progress_seekbar.apply {
+            max = QuizzQuestions.questions.size
+            progress = questionIndex + 1
+            setOnTouchListener { _, _ -> true }
+            thumb = thumb.mutate().apply {
+                alpha = 0
+            }
+        }
     }
 
     private fun initializeQuestionTitle() {
