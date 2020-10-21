@@ -1,4 +1,4 @@
-package uoc.quizz.data.database
+package uoc.quizz.data.repository.database
 
 import android.content.Context
 import androidx.room.Room
@@ -7,10 +7,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import uoc.quizz.common.QuizzQuestions
-import uoc.quizz.data.dao.QuestionsDao
-import uoc.quizz.data.dao.QuizzesDao
+import uoc.quizz.data.questions.QuizzQuestions
+import uoc.quizz.data.repository.dao.QuestionsDao
+import uoc.quizz.data.repository.dao.QuizzesDao
 
+/**
+ * Provide database instance
+ */
 object DatabaseInstanceProvider {
     private var instance: QuestionsDatabase? = null
     private val io = CoroutineScope(Dispatchers.IO)
@@ -21,6 +24,9 @@ object DatabaseInstanceProvider {
         }
     }
 
+    /**
+     * Initialize database instance that will later be provided to callers
+     */
     fun create(context: Context): QuestionsDatabase {
         if (instance == null) {
             instance = Room.databaseBuilder(
@@ -35,15 +41,24 @@ object DatabaseInstanceProvider {
         return instance!!
     }
 
+    /**
+     * Force database empty transaction so creation callback is actually called
+     */
     private fun forceDatabaseCallbacks() = io.launch {
         instance?.runInTransaction { }
     }
 
+    /**
+     * Provide [QuestionsDao] instance
+     */
     fun getQuestionsDao(): QuestionsDao {
         ensureInstanceNotNull()
         return instance!!.questionsDao()
     }
 
+    /**
+     * Provide [QuizzesDao] instance
+     */
     fun getQuizzesDao(): QuizzesDao {
         ensureInstanceNotNull()
         return instance!!.quizzesDao()
@@ -55,7 +70,7 @@ object DatabaseInstanceProvider {
         }
     }
 
-    fun prepopulateData() = io.launch {
+    private fun prepopulateData() = io.launch {
         val dao = instance?.questionsDao()
         if (dao != null) {
             QuizzQuestions.questions.forEach {

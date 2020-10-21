@@ -1,4 +1,4 @@
-package uoc.quizz.result
+package uoc.quizz.ui.result
 
 const val QUESTION_RESULT_INTENT_EXTRA_SELECTED_ANSWER_ID =
     "QUESTION_RESULT_INTENT_EXTRA_SELECTED_ANSWER_ID"

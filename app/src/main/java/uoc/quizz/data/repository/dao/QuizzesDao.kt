@@ -1,10 +1,10 @@
-package uoc.quizz.data.dao
+package uoc.quizz.data.repository.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import uoc.quizz.data.entity.Quiz
+import uoc.quizz.data.repository.entity.Quiz
 
 @Dao
 interface QuizzesDao {

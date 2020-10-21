@@ -1,4 +1,4 @@
-package uoc.quizz.result
+package uoc.quizz.ui.result
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,12 +11,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uoc.quizz.R
-import uoc.quizz.common.QuizzProgressManager
-import uoc.quizz.data.entity.QUESTION_SERIALIZE_EXTRA
-import uoc.quizz.data.entity.QUIZ_SERIALIZE_EXTRA
-import uoc.quizz.data.entity.Question
-import uoc.quizz.data.entity.Quiz
-import uoc.quizz.question.QuestionActivity
+import uoc.quizz.data.questions.QuizzProgressManager
+import uoc.quizz.data.repository.entity.QUESTION_SERIALIZE_EXTRA
+import uoc.quizz.data.repository.entity.QUIZ_SERIALIZE_EXTRA
+import uoc.quizz.data.repository.entity.Question
+import uoc.quizz.data.repository.entity.Quiz
+import uoc.quizz.ui.question.QuestionActivity
 import java.io.Serializable
 
 // region Region: Constants

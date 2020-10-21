@@ -1,7 +1,7 @@
-package uoc.quizz.common
+package uoc.quizz.data.questions
 
-import uoc.quizz.data.entity.Answer
-import uoc.quizz.data.entity.Question
+import uoc.quizz.data.repository.entity.Answer
+import uoc.quizz.data.repository.entity.Question
 
 /**
  * Battery of questions

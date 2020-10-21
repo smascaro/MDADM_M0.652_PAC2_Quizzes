@@ -1,14 +1,14 @@
-package uoc.quizz.data.database
+package uoc.quizz.data.repository.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import uoc.quizz.data.dao.QuestionsDao
-import uoc.quizz.data.dao.QuizzesDao
-import uoc.quizz.data.entity.AnswersConverter
-import uoc.quizz.data.entity.Question
-import uoc.quizz.data.entity.QuestionItemConverter
-import uoc.quizz.data.entity.Quiz
+import uoc.quizz.data.repository.dao.QuestionsDao
+import uoc.quizz.data.repository.dao.QuizzesDao
+import uoc.quizz.data.repository.entity.AnswersConverter
+import uoc.quizz.data.repository.entity.Question
+import uoc.quizz.data.repository.entity.QuestionItemConverter
+import uoc.quizz.data.repository.entity.Quiz
 
 @Database(entities = arrayOf(Question::class, Quiz::class), version = 2)
 @TypeConverters(AnswersConverter::class, QuestionItemConverter::class)
